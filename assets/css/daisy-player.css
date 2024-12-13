@@ -1,0 +1,75 @@
+.daisy-player-wrapper {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.player-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.player-header h2 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.book-info {
+    color: #666;
+}
+
+.player-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#audioPlayer {
+    width: 100%;
+}
+
+.control-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.speed-control {
+    padding: 5px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.speed-control.active {
+    background: #0073aa;
+    color: white;
+    border-color: #0073aa;
+}
+
+.progress-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    position: relative;
+}
+
+.progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: #0073aa;
+    border-radius: 2px;
+} 

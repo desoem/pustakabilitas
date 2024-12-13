@@ -1,0 +1,89 @@
+/* Gaya untuk Halaman Admin */
+.pustakabilitas-admin-header {
+    background: #0073aa;
+    color: #fff;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 4px;
+}
+
+.pustakabilitas-form-group {
+    margin-bottom: 15px;
+}
+
+.pustakabilitas-form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.pustakabilitas-form-group input,
+.pustakabilitas-form-group select,
+.pustakabilitas-form-group textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+/* CSS untuk mengatur lebar kolom agar lebih rapi */
+.book-meta-field input.book-meta-input {
+    max-width: 75%; /* Menyesuaikan lebar input form */
+    margin-bottom: 10px;
+}
+
+.book-meta-field label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Menambahkan margin di antara form input */
+.book-meta-field p {
+    margin-bottom: 15px;
+}
+
+/* Jika ingin memberikan padding tambahan */
+.book-meta-field .widefat {
+    padding: 8px;
+}
+
+.pustakabilitas-meta-box {
+    padding: 12px;
+}
+
+.pustakabilitas-meta-box .meta-field {
+    margin-bottom: 20px;
+}
+
+.pustakabilitas-meta-box label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.pustakabilitas-meta-box input[type="text"],
+.pustakabilitas-meta-box input[type="number"],
+.pustakabilitas-meta-box input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.pustakabilitas-meta-box .statistics {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.pustakabilitas-meta-box .statistics h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.pustakabilitas-meta-box .description {
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+}

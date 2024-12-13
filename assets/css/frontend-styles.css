@@ -1,0 +1,117 @@
+/* Gaya untuk Halaman Frontend */
+.pustakabilitas-book {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.pustakabilitas-book .book-thumbnail img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.pustakabilitas-book .button {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px 0;
+    color: #fff;
+    background: #0073aa;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pustakabilitas-book .button:hover {
+    background: #005177;
+}
+/* Daisy Player Styling */
+.daisy-player-container {
+    background: #f1f1f1;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.daisy-player-container audio {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+/* Styling untuk tombol dan pemutar audio */
+.pustakabilitas-book .button {
+    padding: 10px 20px;
+    margin: 10px 0;
+    background-color: #0073aa;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.pustakabilitas-book .button:hover {
+    background-color: #005177;
+}
+
+.daisy-player-container {
+    margin-top: 20px;
+    background-color: #f1f1f1;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.daisy-player-container audio {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+/* Contoh CSS untuk tampilan frontend */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.pustakabilitas-book {
+    margin-bottom: 30px;
+}
+
+.pustakabilitas-book .button {
+    margin-right: 20px;
+}
+
+#daisy-player {
+    margin-top: 20px;
+}
+.book-thumbnail {
+    width: 33%;
+    float: left;
+}
+
+.book-description {
+    width: 66%;
+    float: left;
+    padding-left: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0073aa;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.book-meta {
+    margin-top: 25px;
+    padding-top: 25px;
+}
+
+.book-meta p {
+    margin: 10px 0;
+}
