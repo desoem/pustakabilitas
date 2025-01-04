@@ -207,7 +207,7 @@ Plugin ini telah diuji dengan tema:
 - Astra
 
 ### Dukungan
-Untuk bantuan dan pertanyaan, silakan buat issue di repositori GitHub atau hubungi support@pustakabilitas.com
+Untuk bantuan dan pertanyaan, silakan buat issue di repositori GitHub 
 
 ## Changelog
 
