@@ -75,7 +75,7 @@ Tested with themes:
 - Astra
 
 ### Support
-For help and questions, please create an issue on GitHub or contact support@pustakabilitas.com
+For help and questions, please create an issue on GitHub
 
 ---
 
