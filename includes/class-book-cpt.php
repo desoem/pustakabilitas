@@ -12,7 +12,9 @@ class Pustakabilitas_Book_CPT {
         add_action( 'save_post', [ $this, 'save_book_meta' ] );
         add_filter( 'manage_pustakabilitas_book_posts_columns', [ $this, 'add_custom_columns' ] );
         add_action( 'manage_pustakabilitas_book_posts_custom_column', [ $this, 'render_custom_columns' ], 10, 2 );
-        add_action( 'init', [ $this, 'register_taxonomy' ] );
+        add_action( 'init', [ $this, 'register_taxonomies' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ] );
     }
 
     /**
@@ -41,7 +43,7 @@ class Pustakabilitas_Book_CPT {
             'supports'           => [ 'title', 'editor', 'thumbnail', 'excerpt' ],
             'menu_icon'          => 'dashicons-book',
             'show_in_rest'       => true,
-            'taxonomies'         => ['book_category'],
+            'taxonomies'         => ['book_category', 'book_tag'],
         ];
 
         register_post_type( 'pustakabilitas_book', $args );
@@ -268,6 +270,47 @@ class Pustakabilitas_Book_CPT {
         );
     }
 
+    public function enqueue_scripts() {
+        // Untuk archive dan taxonomy pages
+        if (is_post_type_archive('pustakabilitas_book') || is_tax('book_category')) {
+            wp_enqueue_style('dashicons');
+            wp_enqueue_style('pustakabilitas-archive',
+                plugin_dir_url(__FILE__) . '../assets/css/archive.css',
+                array('dashicons'),
+                PUSTAKABILITAS_VERSION
+            );
+            
+            wp_enqueue_script('jquery');
+            wp_enqueue_script('pustakabilitas-archive',
+                plugin_dir_url(__FILE__) . '../assets/js/archive.js',
+                array('jquery'),
+                PUSTAKABILITAS_VERSION,
+                true
+            );
+        }
+
+        // Untuk single book page
+        if (is_singular('pustakabilitas_book')) {
+            wp_enqueue_style('pustakabilitas-single-book', 
+                PUSTAKABILITAS_ASSETS_URL . 'css/single-book-styles.css',
+                array(),
+                PUSTAKABILITAS_VERSION
+            );
+            
+            wp_enqueue_script('pustakabilitas-book-interactions',
+                PUSTAKABILITAS_ASSETS_URL . 'js/book-interactions.js',
+                array('jquery'),
+                PUSTAKABILITAS_VERSION,
+                true
+            );
+            
+            wp_localize_script('pustakabilitas-book-interactions', 'pustakabilitasAjax', array(
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('pustakabilitas_ajax')
+            ));
+        }
+    }
+
     public function enqueue_frontend_scripts() {
         wp_enqueue_script(
             'pustakabilitas-frontend',
@@ -317,32 +360,54 @@ class Pustakabilitas_Book_CPT {
     /**
      * Mendaftarkan Taxonomy Kategori Buku
      */
-    public function register_taxonomy() {
-        $labels = [
-            'name'              => __( 'Book Categories', 'pustakabilitas' ),
-            'singular_name'     => __( 'Book Category', 'pustakabilitas' ),
-            'search_items'      => __( 'Search Categories', 'pustakabilitas' ),
-            'all_items'         => __( 'All Categories', 'pustakabilitas' ),
-            'parent_item'       => __( 'Parent Category', 'pustakabilitas' ),
-            'parent_item_colon' => __( 'Parent Category:', 'pustakabilitas' ),
-            'edit_item'         => __( 'Edit Category', 'pustakabilitas' ),
-            'update_item'       => __( 'Update Category', 'pustakabilitas' ),
-            'add_new_item'      => __( 'Add New Category', 'pustakabilitas' ),
-            'new_item_name'     => __( 'New Category Name', 'pustakabilitas' ),
-            'menu_name'         => __( 'Categories', 'pustakabilitas' ),
+    public function register_taxonomies() {
+        // Book Category Taxonomy
+        $category_labels = [
+            'name'              => _x('Book Categories', 'taxonomy general name', 'pustakabilitas'),
+            'singular_name'     => _x('Book Category', 'taxonomy singular name', 'pustakabilitas'),
+            'search_items'      => __('Search Categories', 'pustakabilitas'),
+            'all_items'         => __('All Categories', 'pustakabilitas'),
+            'parent_item'       => __('Parent Category', 'pustakabilitas'),
+            'parent_item_colon' => __('Parent Category:', 'pustakabilitas'),
+            'edit_item'         => __('Edit Category', 'pustakabilitas'),
+            'update_item'       => __('Update Category', 'pustakabilitas'),
+            'add_new_item'      => __('Add New Category', 'pustakabilitas'),
+            'new_item_name'     => __('New Category Name', 'pustakabilitas'),
+            'menu_name'         => __('Categories', 'pustakabilitas'),
         ];
 
-        $args = [
-            'labels'            => $labels,
+        register_taxonomy('book_category', ['pustakabilitas_book'], [
             'hierarchical'      => true,
-            'public'            => true,
-            'show_ui'           => true,
+            'labels'           => $category_labels,
+            'show_ui'          => true,
             'show_admin_column' => true,
-            'show_in_rest'      => true,
-            'rewrite'           => ['slug' => 'book-category'],
+            'query_var'        => true,
+            'rewrite'          => ['slug' => 'book-category'],
+            'show_in_rest'     => true,
+        ]);
+
+        // Book Tags Taxonomy
+        $tag_labels = [
+            'name'              => _x('Book Tags', 'taxonomy general name', 'pustakabilitas'),
+            'singular_name'     => _x('Book Tag', 'taxonomy singular name', 'pustakabilitas'),
+            'search_items'      => __('Search Tags', 'pustakabilitas'),
+            'all_items'         => __('All Tags', 'pustakabilitas'),
+            'edit_item'         => __('Edit Tag', 'pustakabilitas'),
+            'update_item'       => __('Update Tag', 'pustakabilitas'),
+            'add_new_item'      => __('Add New Tag', 'pustakabilitas'),
+            'new_item_name'     => __('New Tag Name', 'pustakabilitas'),
+            'menu_name'         => __('Tags', 'pustakabilitas'),
         ];
 
-        register_taxonomy( 'book_category', 'pustakabilitas_book', $args );
+        register_taxonomy('book_tag', ['pustakabilitas_book'], [
+            'hierarchical'      => false,
+            'labels'           => $tag_labels,
+            'show_ui'          => true,
+            'show_admin_column' => true,
+            'query_var'        => true,
+            'rewrite'          => ['slug' => 'book-tag'],
+            'show_in_rest'     => true,
+        ]);
     }
 }
 

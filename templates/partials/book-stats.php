@@ -1,11 +1,18 @@
 <?php
-// Menampilkan statistik buku
 $book_id = get_the_ID();
-$book_downloads = get_post_meta( $book_id, 'pustakabilitas_downloads', true );
-$book_reads = get_post_meta( $book_id, 'pustakabilitas_reads', true );
-
+$stats = array(
+    'downloads' => get_post_meta($book_id, '_pustakabilitas_download_count', true) ?: 0,
+    'reads' => get_post_meta($book_id, '_pustakabilitas_read_count', true) ?: 0,
+    'rating' => get_post_meta($book_id, '_pustakabilitas_rating', true) ?: 0
+);
 ?>
 <div class="book-stats">
-    <p><strong>Jumlah Unduhan:</strong> <?php echo $book_downloads; ?></p>
-    <p><strong>Jumlah Pembacaan Buku Audio:</strong> <?php echo $book_reads; ?></p>
+    <div class="stat-item downloads">
+        <span class="stat-number"><?php echo number_format_i18n($stats['downloads']); ?></span>
+        <span class="stat-label"><?php _e('Downloads', 'pustakabilitas'); ?></span>
+    </div>
+    <div class="stat-item reads">
+        <span class="stat-number"><?php echo number_format_i18n($stats['reads']); ?></span>
+        <span class="stat-label"><?php _e('Reads', 'pustakabilitas'); ?></span>
+    </div>
 </div>

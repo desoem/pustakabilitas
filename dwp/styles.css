@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap');
+
+body {
+    font-family: 'Lexend', sans-serif !important;
+}
+
+.ui .hidden {
+    display: none !important;
+}
+
+.ui.container,
+.ui.segments,
+.ui.segment {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.magnify {
+    font-weight: bold;
+    background: yellow;
+    border-radius: 10px;
+    border: lightpink solid 1px;
+    font-size: 4rem !important;
+    line-height: 1.2em;
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    justify-content: center;
+    min-height: 20rem;
+}
+
+.xui.grid,
+.xcolumn,
+.xrow {
+    border: solid green 1px !important;
+}
+
+.xui.segments {
+    border: solid gray 1px !important;
+}
+
+.xui.segment {
+    border: solid pink 1px !important;
+}
+
+.xui.container {
+    border: solid lightcoral 1px !important;
+}
+
+
+h1,
+footer {
+    color: gray;
+}
+
+h2 {
+    color: gray;
+}
+
+footer {
+    border-top: solid gray 1px;
+}
+
+.underline {
+    border-bottom: solid gray 1px;
+}
+
+.dwp-pad-9 {
+    display: grid;
+    grid-template-rows: 60px 60px 60px;
+    grid-template-columns: 60px 60px 60px;
+}
+
+.dwp-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.dwp-menu {
+    text-align: left !important;
+    border-top: solid 1px #2185d0 !important;
+    border-bottom: solid 1px #2185d0 !important;
+}
+
+.dwp-menu-item {
+    border-radius: 0 !important;
+}
+
+.dwp-menu-item.active {
+    background-color: #2185d0 !important;
+    color: white !important;
+    font-weight: bold !important;
+}
+
+.dwp-toc {
+    color: #2185d0;
+}
+
+.dwp-error {
+    padding: 1rem;
+}
+
+.dwp-error h1 {
+    color: #2185d0;
+    border-bottom: solid 1px;
+}
+
+.dwp-error h2 {
+    color: tomato;
+}

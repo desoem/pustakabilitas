@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Daisy Web Player (C) 2010-2022 ABA Genève & Martin Mohnhaupt" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Title here</title>
+    <!-- Icons, See : https://favicon.io/favicon-generator/ -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <!-- Styles (Semantic UI, own) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css">
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Google Tag Manager -->
+    <script defer type="module" src="js/google-analytics.js"></script>
+    <!-- End Google Tag Manager -->
+
+    <!-- JS (jQuery, Semanic UI, own) -->
+    <script defer src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"></script>
+    <!-- Main script -->
+    <script defer type="module" src="js/dwp.js"></script>
+</head>
+
+<body role="document">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTS7RCT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div id="dwp-full-ui" class="ui container" style="display: none;">
+        <!-- Header -->
+        <header class="ui" role="banner">
+            <h1 class="underline">Pustakabilitas</h1>
+            <h2 id="dwp-book-title">Titre du livre</h2>
+        </header>
+
+        <!-- Top menu (start) -->
+        <nav id="dwp-page-menu" class="ui six item stackable secondary menu dwp-menu" role="main navigation">
+            <a id="dwp-menu-read" data-target="dwp-page-main" class="item active dwp-menu-item left" tabindex="1">Lecture</a>
+            <a id="dwp-menu-bookmarks" data-target="dwp-page-bookmarks" class="item dwp-menu-item left" tabindex="2">Signets</a>
+            <a id="dwp-menu-toc" data-target="dwp-page-toc" class="item dwp-menu-item left" tabindex="3">Table des matières</a>
+            <a id="dwp-menu-details" data-target="dwp-page-details" class="item dwp-menu-item left" tabindex="4">Détails du livre</a>
+            <a id="dwp-menu-infos" data-target="dwp-page-infos" class="item dwp-menu-item left" tabindex="5">Informasi</a>
+            <!-- <a id="dwp-menu-settings" data-target="dwp-page-settings" class="item dwp-menu-item" tabindex="6">Paramètres</a> -->
+        </nav>
+
+        <!-- Main page (start) -->
+        <div id="dwp-page-main" class="ui segments dwp-page">
+            <div class="ui segment">
+                <div class="ui six column stackable middle aligned grid">
+                    <div class="column">
+                        <!-- Book navigation (start)  -->
+                        <nav id="dwp-book-nav" class="dwp-pad-9" role="navigation">
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell">
+                                <button id="dwp-book-level-up" class="ui huge orange icon button" tabindex="7"><i class="angle double up icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell">
+                                <button id="dwp-book-backward" class="ui huge orange icon button" tabindex="9"><i class="angle double left icon"></i></button>
+                            </div>
+                            <div class="dwp-cell">
+                                <button id="dwp-player-bookmark" class="ui huge white icon button" tabindex="11"><i class="bookmark icon"></i></button>
+                            </div>
+                            <div class="dwp-cell">
+                                <button id="dwp-book-forward" class="ui huge orange icon button" tabindex="10"><i class="angle double right icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell">
+                                <button id="dwp-book-level-down" class="ui huge orange icon button" tabindex="8"><i class="angle double down icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                        </nav>
+                        <!-- <div class="sui slabel" style="width: 180px; text-align: center;">
+                            Book navigation
+                        </div> -->
+                        <!-- Book navigation (end)  -->
+                    </div>
+                    <div class="column">
+                        <!-- Audio clip control (start) -->
+                        <nav id="dwp-audio-nav" class="dwp-pad-9" role="navigation">
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell">
+                                <button id="dwp-clip-backward" class="ui huge white icon button" tabindex="11"><i class="backward icon"></i></button>
+                            </div>
+                            <div class="dwp-cell">
+                                <button id="dwp-clip-play" class="ui huge orange icon button" tabindex="13"><i class="play icon"></i></button>
+                                <button id="dwp-clip-pause" class="ui huge orange icon button" tabindex="14"><i class="pause icon"></i></button>
+                            </div>
+                            <div class="dwp-cell">
+                                <button id="dwp-clip-forward" class="ui huge white icon button" tabindex="12"><i class="forward icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell"></div>
+                        </nav>
+                        <!-- <div class="ui label" style="width: 180px; text-align: center;">
+                            <span id="dwp-label-playback-control">Playback control</span>
+                        </div> -->
+                        <!-- Audio clip control (end) -->
+                    </div>
+                    <div class="column">
+                        <!-- Volume and playback rate control (start) -->
+                        <nav id="dwp-various-nav" class="dwp-pad-9" role="navigation">
+                            <div class="dwp-cell">
+                                <button id="dwp-volume-up" class="ui huge orange icon button" tabindex="15"><i class="volume up icon"></i></button>
+                            </div>
+                            <div class="dwp-cell">
+                                <button id="dwp-play-fastest" class="ui huge orange icon button" tabindex="17"><i class="arrow alternate circle up icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell">
+                                <button id="dwp-play-faster" class="ui huge orange icon button" tabindex="18"><i class="arrow alternate circle up outline icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                            <div class="dwp-cell">
+                                <button id="dwp-volume-down" class="ui huge orange icon button" tabindex="16"><i class="volume down icon"></i></button>
+                            </div>
+                            <div class="dwp-cell">
+                                <button id="dwp-play-normal" class="ui huge orange icon button" tabindex="19"><i class="undo icon"></i></button>
+                            </div>
+                            <div class="dwp-cell"></div>
+                        </nav>
+                        <!-- <div class="ui label" style="width: 120px; text-align: left;">
+                            Volume and rate
+                        </div> -->
+                        <!-- Volume and playback rate control (end) -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text zone -->
+            <div class="ui segment">
+                <div id="dwp-text-zone" class="magnify" tabindex="0" title="texte en lecture">
+                    Full text here !
+                </div>
+            </div>
+
+            <!-- Play progress bar -->
+            <div id="dwp-play-progress" role="complementary" class="ui progress small green">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+
+            <!-- Status zone -->
+            <div class="ui segment" id="dwp-status-zone">
+                <table class="ui small fixed compact celled table">
+                    <thead>
+                        <tr class="center aligned">
+                            <th id="dwp-status-position">Position</th>
+                            <th id="dwp-status-duration">Duration</th>
+                            <th id="dwp-status-volume">Volume (0..100)</th>
+                            <th id="dwp-status-event">Last event</th>
+                            <th id="dwp-status-rate">Playback rate</th>
+                            <th id="dwp-status-req-level">Req. nav. level</th>
+                            <th id="dwp-status-cur-level">Current level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="center aligned">
+                            <td id="dwp-clip-position"></td>
+                            <td id="dwp-clip-duration"></td>
+                            <td id="dwp-clip-volume"></td>
+                            <td id="dwp-clip-event"></td>
+                            <td id="dwp-clip-rate"></td>
+                            <td id="dwp-nav-level"></td>
+                            <td id="dwp-nav-level-cur"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Main page (end) -->
+        <!-- Bookmarks page (start) -->
+        <div id="dwp-page-bookmarks" class="ui segments dwp-page" style="display: none;">
+            <h2 id="dwp-tab-bookmarks">Bookmark</h2>
+            <div id="dwp-bookmarks">
+                <!-- Placeholder -->
+            </div>
+        </div>
+        <!-- Bookmarks page (end) -->
+        <!-- TOC page (start) -->
+        <div id="dwp-page-toc" class="ui segments dwp-page" style="display: none;">
+            <h2 id="dwp-tab-toc">Table of contents</h2>
+            <ul id="dwp-toc" class="dwp-toc">
+                <!--Dummy place holder -->
+            </ul>
+        </div>
+        <!-- TOC page (end) -->
+        <!-- Metadata page (start) -->
+        <div id="dwp-page-details" class="ui segments dwp-page" style="display: none;">
+            <h2 id="dwp-tab-details">Book metadata</h2>
+            <table class="ui compact striped table">
+                <thead>
+                    <tr>
+                        <th id="dwp-property">Property</th>
+                        <th id="dwp-value">Value</th>
+                        <th id="dwp-scheme">Schema</th>
+                    </tr>
+                </thead>
+                <tbody id="dwp-meta-table-body">
+                    <tr>
+                        <!--Dummy place holder -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Metadata page (end) -->
+        <!-- Infos page (start) -->
+        <div id="dwp-page-infos" class="ui segments dwp-page" style="display: none;">
+            <h2>Daisy Web Player</h2>
+            <p>This software is "open source", you can adapt it to your own needs. The only constraint is that you must mention the ABA copyright on your website.</p>
+            <p>To have this software adapted, send a message to the ABA <a id="dwp-mail-to" href="mailto:aba@abage.ch?subject=Daisy player 2.0" target="_blank" tabindex="-1"><i
+                        class="external alternate icon"></i></a>.</p>
+            <h2 id="dwp-software-infos">Informations</h2>
+            <table class="ui compact striped table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="dwp-info-table-body">
+                    <tr>
+                        <!--Dummy place holder -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Infos page (end) -->
+        <!-- Settings page (start) -->
+        <!-- <div id="dwp-page-settings" class="ui segments dwp-page" style="display: none;">
+            <h2 id="dwp-tab-settings">Settings</h2>
+            <ul>
+                <li>Save settings to local storage</li>
+                <li>Remember book</li>
+                <li>Store bookmarks</li>
+            </ul>
+        </div> -->
+        <!-- Settings page (end) -->
+
+        <!-- Footer -->
+        <!--<footer id="dwp-footer" class="ui footer underline" role="contentinfo">Footer</footer>-->
+    </div>
+    <!-- <div class="ui container" id="dwp-simple-ui" style="display:none">
+        <h1>Simple UI</h1>
+    </div> -->
+    <!-- Audio element (player) -->
+    <audio id="dwp-audio-player">
+        <source id="dwp-audio-source">
+    </audio>
+</body>
+
+</html>

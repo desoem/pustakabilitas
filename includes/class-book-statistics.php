@@ -38,6 +38,99 @@ class Pustakabilitas_Book_Statistics {
             update_post_meta($book_id, $meta_key, $current_value);
         }
     }
+
+    /**
+     * Get total number of book downloads
+     */
+    public function get_total_downloads() {
+        global $wpdb;
+        $total = $wpdb->get_var("
+            SELECT SUM(meta_value) 
+            FROM {$wpdb->postmeta} 
+            WHERE meta_key = '_pustakabilitas_download_count'
+        ");
+        return intval($total);
+    }
+
+    /**
+     * Get total number of book reads
+     */
+    public function get_total_reads() {
+        global $wpdb;
+        $total = $wpdb->get_var("
+            SELECT SUM(meta_value) 
+            FROM {$wpdb->postmeta} 
+            WHERE meta_key = '_pustakabilitas_read_count'
+        ");
+        return intval($total);
+    }
+
+    /**
+     * Get book statistics for a specific book
+     */
+    public function get_book_stats($book_id) {
+        $downloads = get_post_meta($book_id, '_pustakabilitas_download_count', true);
+        $reads = get_post_meta($book_id, '_pustakabilitas_read_count', true);
+        
+        return array(
+            'downloads' => intval($downloads) ?: 0,
+            'reads' => intval($reads) ?: 0
+        );
+    }
+
+    public function track_book_download($book_id, $user_id) {
+        global $wpdb;
+        
+        // Update jumlah unduh buku
+        $current_count = get_post_meta($book_id, '_pustakabilitas_download_count', true);
+        $new_count = intval($current_count) + 1;
+        update_post_meta($book_id, '_pustakabilitas_download_count', $new_count);
+        
+        // Catat aktivitas user
+        $wpdb->insert(
+            $wpdb->prefix . 'pustakabilitas_user_activity',
+            array(
+                'user_id' => $user_id,
+                'book_id' => $book_id,
+                'activity_type' => 'download',
+                'activity_date' => current_time('mysql')
+            ),
+            array('%d', '%d', '%s', '%s')
+        );
+    }
+
+    public function track_book_read($book_id, $user_id) {
+        global $wpdb;
+        
+        // Update jumlah baca buku
+        $current_count = get_post_meta($book_id, '_pustakabilitas_read_count', true);
+        $new_count = intval($current_count) + 1;
+        update_post_meta($book_id, '_pustakabilitas_read_count', $new_count);
+        
+        // Catat aktivitas user
+        $wpdb->insert(
+            $wpdb->prefix . 'pustakabilitas_user_activity',
+            array(
+                'user_id' => $user_id,
+                'book_id' => $book_id,
+                'activity_type' => 'read',
+                'activity_date' => current_time('mysql')
+            ),
+            array('%d', '%d', '%s', '%s')
+        );
+    }
+
+    public function update_read_count($post_id) {
+        $current_count = get_post_meta($post_id, '_pustakabilitas_read_count', true);
+        $new_count = ($current_count) ? $current_count + 1 : 1;
+        update_post_meta($post_id, '_pustakabilitas_read_count', $new_count);
+    }
+
+    public function update_download_count($post_id) {
+        $current_count = get_post_meta($post_id, '_pustakabilitas_download_count', true);
+        $new_count = ($current_count) ? $current_count + 1 : 1;
+        update_post_meta($post_id, '_pustakabilitas_download_count', $new_count);
+    }
 }
 
 new Pustakabilitas_Book_Statistics();

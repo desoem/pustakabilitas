@@ -1,117 +1,462 @@
-/* Gaya untuk Halaman Frontend */
-.pustakabilitas-book {
-    margin: 20px 0;
-    padding: 20px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+/* Reset & Base */
+.pustakabilitas-front-page {
+    width: 100%;
+    overflow-x: hidden;
 }
 
-.pustakabilitas-book .book-thumbnail img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
 }
 
-.pustakabilitas-book .button {
-    display: inline-block;
-    padding: 10px 15px;
-    margin: 5px 0;
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+    background-size: cover;
+    background-position: center;
     color: #fff;
-    background: #0073aa;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 14px;
-    cursor: pointer;
+    text-align: center;
+    padding: 120px 0 80px;
+    margin-top: 30px;
 }
 
-.pustakabilitas-book .button:hover {
-    background: #005177;
+/* Books Section */
+.books-section {
+    padding: 70px 0;
+    background: #f8f9fa;
 }
-/* Daisy Player Styling */
-.daisy-player-container {
-    background: #f1f1f1;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+
+.section-title {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 50px;
+    font-weight: 600;
     text-align: center;
 }
 
-.daisy-player-container audio {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-/* Styling untuk tombol dan pemutar audio */
-.pustakabilitas-book .button {
-    padding: 10px 20px;
-    margin: 10px 0;
-    background-color: #0073aa;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
+/* Books Grid */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 30px;
 }
 
-.pustakabilitas-book .button:hover {
-    background-color: #005177;
-}
-
-.daisy-player-container {
-    margin-top: 20px;
-    background-color: #f1f1f1;
-    padding: 15px;
-    border: 1px solid #ddd;
+/* Book Card */
+.book-card {
+    background: #fff;
     border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
-.daisy-player-container audio {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-/* Contoh CSS untuk tampilan frontend */
-body {
-    font-family: Arial, sans-serif;
+.book-card:hover {
+    transform: translateY(-5px);
 }
 
-.pustakabilitas-book {
-    margin-bottom: 30px;
-}
-
-.pustakabilitas-book .button {
-    margin-right: 20px;
-}
-
-#daisy-player {
-    margin-top: 20px;
-}
 .book-thumbnail {
-    width: 33%;
-    float: left;
+    position: relative;
+    padding-top: 140%;
+    overflow: hidden;
 }
 
-.book-description {
-    width: 66%;
-    float: left;
-    padding-left: 20px;
+.book-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.btn {
+.book-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.book-author {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 15px;
+}
+
+.btn-wrapper {
+    text-align: center;
+    margin-top: auto;
+}
+
+.btn-read-more {
     display: inline-block;
-    padding: 10px 20px;
-    background-color: #0073aa;
-    color: white;
+    padding: 8px 20px;
+    background: #0073aa;
+    color: #fff;
     text-decoration: none;
-    border-radius: 5px;
-    margin-right: 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
 }
 
-.book-meta {
-    margin-top: 25px;
-    padding-top: 25px;
+.btn-read-more:hover {
+    background: #005177;
+    color: #fff;
+    transform: translateY(-2px);
 }
 
-.book-meta p {
-    margin: 10px 0;
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Responsive Grid */
+@media (max-width: 1200px) {
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .hero-section {
+        padding: 80px 0 60px;
+    }
+    
+    .books-section {
+        padding: 40px 0;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .books-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Search Form in Hero */
+.main-search-form {
+    max-width: 600px;
+    margin: 30px auto 0;
+    padding: 20px;
+}
+
+.search-form .input-group {
+    display: flex;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border-radius: 50px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.search-form .form-control {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    font-size: 1rem;
+    color: #2c3e50;
+    background: transparent;
+    outline: none;
+}
+
+.search-form .form-control::placeholder {
+    color: #95a5a6;
+    opacity: 0.8;
+}
+
+.search-form .btn-primary {
+    padding: 15px 30px;
+    border: none;
+    background: #0073aa;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.search-form .btn-primary:hover {
+    background: #005177;
+}
+
+.search-form .btn-primary i {
+    font-size: 1.2rem;
+    color: #ffffff !important;
+}
+
+.search-form .btn-primary:hover i {
+    color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columns for tablet */
+    }
+}
+
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+        gap: 20px;
+    }
+    
+    .hero-section {
+        padding: 80px 0 60px;
+    }
+    
+    .books-section {
+        padding: 40px 0;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr); /* Keep 2 columns for small mobile */
+        gap: 15px;
+    }
+    
+    .book-info {
+        padding: 15px;
+    }
+    
+    .book-title {
+        font-size: 1em;
+    }
+}
+
+/* Responsive Search Form */
+@media (max-width: 768px) {
+    .main-search-form {
+        padding: 15px;
+        margin: 20px auto 0;
+    }
+
+    .search-form .form-control {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+
+    .search-form .btn-primary {
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-search-form {
+        padding: 10px;
+    }
+
+    .search-form .form-control {
+        padding: 10px 15px;
+    }
+
+    .search-form .btn-primary {
+        padding: 10px 20px;
+    }
+}
+
+/* Statistics Section */
+.statistics-section {
+    margin-top: -30px;
+    padding: 30px 0;
+    background: transparent;
+    position: relative;
+    z-index: 2;
+}
+
+.statistics-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 30px auto 0;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.stat-item {
+    flex: 1;
+    min-width: 180px;
+}
+
+.stat-box {
+    background: transparent;
+    box-shadow: none;
+    padding: 15px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.stat-icon {
+    background: rgba(255, 255, 255, 0.15);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 22px !important;
+    line-height: 1;
+}
+
+.stat-content {
+    text-align: left;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.stat-number {
+    display: block;
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.stat-box h3 {
+    font-size: 14px;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .statistics-wrapper {
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .stat-box {
+        min-width: 160px;
+    }
+}
+
+/* Font Awesome Icons */
+.fa-search,
+.stat-icon i {
+    color: #ffffff !important;
+    display: inline-block !important;
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+}
+
+/* Search Form Button */
+.search-form .btn-primary {
+    padding: 15px 30px;
+    border: none;
+    background: #0073aa;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.search-form .btn-primary i {
+    font-size: 1.2rem;
+    color: #ffffff !important;
+}
+
+/* Statistics Icons */
+.stat-icon {
+    background: rgba(255, 255, 255, 0.15);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 22px !important;
+    line-height: 1;
+}
+
+/* View All Books Button */
+.section-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.view-all-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #0073aa;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 115, 170, 0.2);
+}
+
+.view-all-button:hover {
+    background: #005177;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 115, 170, 0.3);
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .view-all-button {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
 }

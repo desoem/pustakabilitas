@@ -134,3 +134,224 @@ function pustakabilitas_validate_audio_url($url) {
 function pustakabilitas_get_book_format($post_id) {
     return get_post_meta($post_id, '_pustakabilitas_format', true) ?: 'mp3';
 }
+
+/**
+ * Format file size to human readable format
+ * 
+ * @param int $bytes File size in bytes
+ * @return string Formatted file size
+ */
+function format_file_size($bytes) {
+    if ($bytes >= 1073741824) {
+        return number_format($bytes / 1073741824, 2) . ' GB';
+    } elseif ($bytes >= 1048576) {
+        return number_format($bytes / 1048576, 2) . ' MB';
+    } elseif ($bytes >= 1024) {
+        return number_format($bytes / 1024, 2) . ' KB';
+    } elseif ($bytes > 1) {
+        return $bytes . ' bytes';
+    } elseif ($bytes == 1) {
+        return '1 byte';
+    } else {
+        return '0 bytes';
+    }
+}
+
+/**
+ * Menambahkan buku ke koleksi pengguna
+ */
+function add_book_to_collection($book_id, $user_id = null) {
+    if (!$user_id) {
+        $user_id = get_current_user_id();
+    }
+    
+    // Ambil array pembaca buku saat ini
+    $book_readers = get_post_meta($book_id, 'book_readers', true);
+    if (!is_array($book_readers)) {
+        $book_readers = array();
+    }
+    
+    // Tambahkan user ke array jika belum ada
+    if (!in_array($user_id, $book_readers)) {
+        $book_readers[] = $user_id;
+        update_post_meta($book_id, 'book_readers', $book_readers);
+        
+        // Catat waktu penambahan buku
+        update_post_meta($book_id, 'book_added_' . $user_id, current_time('mysql'));
+        
+        return true;
+    }
+    
+    return false;
+}
+
+/**
+ * Menambahkan action hooks untuk menambahkan buku ke koleksi
+ */
+function auto_add_book_to_collection() {
+    // Saat buku diakses
+    add_action('template_redirect', function() {
+        if (is_singular('pustakabilitas_book')) {
+            $book_id = get_the_ID();
+            add_book_to_collection($book_id);
+        }
+    });
+    
+    // Saat buku diunduh
+    add_action('pustakabilitas_before_book_download', function($book_id, $user_id) {
+        add_book_to_collection($book_id, $user_id);
+    }, 10, 2);
+    
+    // Saat progress membaca disimpan
+    add_action('pustakabilitas_update_reading_progress', function($book_id, $user_id) {
+        add_book_to_collection($book_id, $user_id);
+    }, 10, 2);
+}
+
+// Inisialisasi hooks
+auto_add_book_to_collection();
+
+/**
+ * Mengecek apakah buku ada dalam koleksi pengguna
+ */
+function is_book_in_collection($book_id, $user_id = null) {
+    if (!$user_id) {
+        $user_id = get_current_user_id();
+    }
+    
+    $book_readers = get_post_meta($book_id, 'book_readers', true);
+    return is_array($book_readers) && in_array($user_id, $book_readers);
+}
+
+/**
+ * Mendapatkan informasi tambahan buku
+ */
+function get_book_additional_info($book_id, $user_id = null) {
+    if (!$user_id) {
+        $user_id = get_current_user_id();
+    }
+    
+    return array(
+        'progress' => get_reading_progress($book_id, $user_id),
+        'last_read' => get_user_meta($user_id, 'last_read_' . $book_id, true),
+        'added_date' => get_user_meta($user_id, 'book_added_' . $book_id, true),
+        'is_bookmarked' => is_book_bookmarked($book_id, $user_id),
+        'download_count' => get_user_book_download_count($book_id, $user_id)
+    );
+}
+
+// Fungsi untuk mendapatkan total buku
+function get_total_books() {
+    // Mengambil jumlah buku yang dipublikasikan
+    $count_posts = wp_count_posts('pustakabilitas_book');
+    return intval($count_posts->publish);
+}
+
+// Fungsi untuk mendapatkan total pengguna
+function get_total_users() {
+    // Mengambil jumlah pengguna terdaftar
+    $user_count = count_users();
+    return intval($user_count['total_users']);
+}
+
+// Fungsi untuk mendapatkan total pembacaan audio
+function get_total_reads() {
+    global $wpdb;
+    
+    // Mengambil total pembacaan dari tabel aktivitas
+    $table_name = $wpdb->prefix . 'pustakabilitas_user_activity';
+    if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name) {
+        $total_reads = $wpdb->get_var("
+            SELECT COUNT(*) 
+            FROM $table_name 
+            WHERE activity_type = 'read'
+        ");
+    } else {
+        // Fallback ke metode lama jika tabel belum ada
+        $total_reads = $wpdb->get_var("
+            SELECT SUM(meta_value) 
+            FROM {$wpdb->postmeta} 
+            WHERE meta_key = '_pustakabilitas_read_count'
+        ");
+    }
+    
+    return intval($total_reads) ?: 0;
+}
+
+// Fungsi untuk mendapatkan total unduhan
+function get_total_downloads() {
+    global $wpdb;
+    
+    // Mengambil total unduhan dari tabel aktivitas
+    $table_name = $wpdb->prefix . 'pustakabilitas_user_activity';
+    if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name) {
+        $total_downloads = $wpdb->get_var("
+            SELECT COUNT(*) 
+            FROM $table_name 
+            WHERE activity_type = 'download'
+        ");
+    } else {
+        // Fallback ke metode lama jika tabel belum ada
+        $total_downloads = $wpdb->get_var("
+            SELECT SUM(meta_value) 
+            FROM {$wpdb->postmeta} 
+            WHERE meta_key = '_pustakabilitas_download_count'
+        ");
+    }
+    
+    return intval($total_downloads) ?: 0;
+}
+
+// Fungsi untuk mendapatkan total pengunjung
+function get_total_visitors() {
+    // Menggunakan transient untuk caching
+    $visitors = get_transient('pustakabilitas_total_visitors');
+    
+    if (false === $visitors) {
+        global $wpdb;
+        
+        // Hitung dari tabel log pengunjung
+        $visitors = $wpdb->get_var("
+            SELECT COUNT(DISTINCT ip_address) 
+            FROM {$wpdb->prefix}pustakabilitas_visitors
+        ");
+        
+        // Cache hasil untuk 1 jam
+        set_transient('pustakabilitas_total_visitors', $visitors, HOUR_IN_SECONDS);
+    }
+    
+    return intval($visitors);
+}
+
+function get_popular_books($limit = 8) {
+    global $wpdb;
+    
+    // Query untuk menghitung total downloads dan reads untuk setiap buku
+    $query = $wpdb->prepare("
+        SELECT p.ID, p.post_title,
+            (
+                COALESCE(
+                    (SELECT COUNT(*) FROM {$wpdb->postmeta} 
+                    WHERE post_id = p.ID AND meta_key = '_pustakabilitas_downloads'), 
+                0)
+                +
+                COALESCE(
+                    (SELECT COUNT(*) FROM {$wpdb->postmeta} 
+                    WHERE post_id = p.ID AND meta_key = '_pustakabilitas_reads'), 
+                0)
+            ) as total_interactions
+        FROM {$wpdb->posts} p
+        WHERE p.post_type = 'pustakabilitas_book'
+        AND p.post_status = 'publish'
+        GROUP BY p.ID
+        ORDER BY total_interactions DESC
+        LIMIT %d
+    ", $limit);
+
+    return new WP_Query([
+        'post__in' => $wpdb->get_col($query),
+        'post_type' => 'pustakabilitas_book',
+        'posts_per_page' => $limit,
+        'orderby' => 'post__in'
+    ]);
+}

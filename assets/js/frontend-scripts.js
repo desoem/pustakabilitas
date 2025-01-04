@@ -1,70 +1,57 @@
-document.addEventListener('DOMContentLoaded', function () {
-    console.log('Pustakabilitas Frontend Loaded');
+document.addEventListener('DOMContentLoaded', function() {
+    // Book Statistics Handler
+    class BookStatistics {
+        constructor() {
+            this.initializeEventListeners();
+        }
 
-    // Statistik unduhan dan pembacaan
-    const buttons = document.querySelectorAll('.download-epub-btn, .audio-book-btn');
+        initializeEventListeners() {
+            // Download & Read buttons
+            document.querySelectorAll('.download-epub-btn, .audio-book-btn')
+                .forEach(button => button.addEventListener('click', this.handleAction.bind(this)));
+            
+            // Audio player
+            const audioPlayer = document.getElementById('daisy-player');
+            if (audioPlayer) {
+                audioPlayer.addEventListener('play', this.handleAudioPlay.bind(this));
+            }
+        }
 
-    buttons.forEach(button => {
-        button.addEventListener('click', function (e) {
+        async handleAction(e) {
             e.preventDefault();
+            const button = e.currentTarget;
+            const bookId = button.dataset.bookId;
+            const actionType = button.classList.contains('download-epub-btn') ? 'download' : 'read';
 
-            const bookId = this.dataset.bookId;
-            const actionType = this.classList.contains('download-epub-btn') ? 'download' : 'read';
+            try {
+                await this.recordStatistics(bookId, actionType);
+                if (actionType === 'download') {
+                    window.location.href = button.href;
+                } else {
+                    window.open(button.href, '_blank');
+                }
+            } catch (error) {
+                console.error('Failed to record statistics:', error);
+            }
+        }
 
-            fetch(pustakabilitas.ajax_url, {
+        async recordStatistics(bookId, actionType) {
+            const response = await fetch(pustakabilitas.ajax_url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({
                     action: 'pustakabilitas_record_statistics',
                     book_id: bookId,
-                    action_type: actionType,
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log(`Statistics for ${actionType} recorded successfully.`);
-                    if (actionType === 'download') {
-                        window.location.href = this.href;
-                    } else {
-                        window.open(this.href, '_blank');
-                    }
-                } else {
-                    console.error('Failed to record statistics');
-                }
+                    action_type: actionType
+                })
             });
-        });
-    });
-
-    // Statistik buku audio
-    const audioPlayer = document.getElementById('daisy-player');
-    if (audioPlayer) {
-        audioPlayer.addEventListener('play', function () {
-            console.log('Buku Audio dimulai.');
-
-            const bookId = audioPlayer.getAttribute('data-book-id'); // Mendapatkan book_id
-
-            // Mengirimkan statistik buku audio
-            fetch('/wp-json/pustakabilitas/v1/book-statistics', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    book_id: bookId,
-                    action: 'read'
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Statistik buku audio berhasil dicatat.');
-                } else {
-                    console.error('Gagal mencatat statistik buku audio');
-                }
-            });
-        });
+            
+            const data = await response.json();
+            if (!data.success) throw new Error('Failed to record statistics');
+            return data;
+        }
     }
+
+    // Initialize
+    new BookStatistics();
 });

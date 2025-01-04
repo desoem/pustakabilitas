@@ -1,6 +1,12 @@
 <?php
 get_header();
 
+wp_enqueue_script('pustakabilitas-book-tracking', plugins_url('assets/js/book-tracking.js', dirname(__FILE__)), array('jquery'), null, true);
+wp_localize_script('pustakabilitas-book-tracking', 'pustakabilitasAjax', array(
+    'ajaxurl' => admin_url('admin-ajax.php'),
+    'nonce' => wp_create_nonce('pustakabilitas_tracking')
+));
+
 while (have_posts()) : the_post();
     // Get book metadata
     $author = get_post_meta(get_the_ID(), '_pustakabilitas_author', true) ?: '-';
@@ -10,185 +16,35 @@ while (have_posts()) : the_post();
     $epub_url = get_post_meta(get_the_ID(), '_pustakabilitas_epub_url', true);
     $audio_url = get_post_meta(get_the_ID(), '_pustakabilitas_audio_url', true);
     $book_type = get_post_meta(get_the_ID(), '_pustakabilitas_book_type', true);
-    
+    $book_file = get_post_meta(get_the_ID(), '_pustakabilitas_book_file', true);
+    if (empty($book_file)) {
+        $book_file = get_post_meta(get_the_ID(), '_pustakabilitas_audio_url', true);
+    }
+
+    // Convert audio URL to ncc.html format
+    $ncc_url = '';
+    if (!empty($book_file)) {
+        // Extract the base path from the audio URL 
+        $path_parts = explode('/', $book_file);
+        array_pop($path_parts); 
+        $ncc_url = implode('/', $path_parts) . '/ncc.html';
+    }
+
+    // Get plugin URL for dwp
+    $plugin_url = plugins_url('', dirname(__FILE__));
+
+    // Construct Daisy player URL
+    $player_url = $plugin_url . '/dwp/dwp.html';
+    $player_url = add_query_arg([
+        'lang' => 'id',
+        'ncc' => $ncc_url,
+        'book_id' => get_the_ID()
+    ], $player_url);
+
     // Get statistics
     $downloads = count(get_post_meta(get_the_ID(), '_pustakabilitas_downloads', true) ?: []);
     $reads = count(get_post_meta(get_the_ID(), '_pustakabilitas_reads', true) ?: []);
     ?>
-
-    <style>
-        .pustakabilitas-single-book {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 15px;
-        }
-        
-        .book-container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;  /* 1/3 : 2/3 ratio */
-            gap: 30px;
-        }
-        
-        /* Left Column - Thumbnail */
-        .book-thumbnail {
-            width: 100%;
-        }
-        
-        .book-thumbnail img.book-cover {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        /* Right Column - Content */
-        .book-details {
-            width: 100%;
-        }
-        
-        .book-title {
-            margin-bottom: 20px;
-            font-size: 2em;
-            color: #333;
-        }
-        
-        .book-description {
-            text-align: justify;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            padding: 15px 0;
-        }
-        
-        .book-actions {
-            display: flex;
-            gap: 15px;
-            padding: 15px 0;
-        }
-        
-        .action-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 12px 24px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .download-button {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .audio-button {
-            background-color: #2196F3;
-            color: white;
-        }
-        
-        .action-button:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        
-        .action-button i {
-            margin-right: 8px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .book-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .book-thumbnail {
-                max-width: 400px;
-                margin: 0 auto;
-            }
-            
-            .book-actions {
-                flex-direction: column;
-            }
-            
-            .action-button {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-        
-        /* Book Metadata Styling */
-        .book-meta-container {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .book-meta {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-        }
-
-        .meta-item i {
-            margin-right: 10px;
-            color: #666;
-            font-size: 20px;
-        }
-
-        .meta-label {
-            font-weight: 600;
-            margin-right: 8px;
-            color: #333;
-        }
-
-        .meta-value {
-            color: #666;
-        }
-
-        /* Statistics Styling */
-        .book-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 15px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .stat-count {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .stat-label {
-            color: #666;
-        }
-
-        @media (max-width: 768px) {
-            .book-meta {
-                grid-template-columns: 1fr;
-            }
-            
-            .book-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 
     <div class="pustakabilitas-single-book">
         <div class="book-container">
@@ -213,29 +69,28 @@ while (have_posts()) : the_post();
 
                 <?php if (is_user_logged_in()) : ?>
                     <div class="book-actions">
-                        <?php 
-                        // Tampilkan tombol Download jika ada EPUB URL
-                        if (!empty($epub_url)) : ?>
+                        <?php if (!empty($epub_url)) : ?>
                             <a href="<?php echo esc_url($epub_url); ?>" 
                                class="action-button download-button" 
                                data-book-id="<?php echo get_the_ID(); ?>">
                                 <i class="dashicons dashicons-download"></i>
-                                <?php _e('Download Buku ePub', 'pustakabilitas'); ?>
+                                <?php _e('Download Buku', 'pustakabilitas'); ?>
                             </a>
                         <?php endif; ?>
 
-                        <?php 
-                        // Tampilkan tombol Audio jika ada Audio URL
-                        if (!empty($audio_url)) : ?>
-                            <a href="#" 
-                               class="action-button audio-button" 
-                               data-book-id="<?php echo get_the_ID(); ?>" 
-                               data-audio-url="<?php echo esc_url($audio_url); ?>"
-                               onclick="openDaisyPlayer(event, this);">
-                                <i class="dashicons dashicons-controls-volumeon"></i>
-                                <?php _e('Baca Buku Audio', 'pustakabilitas'); ?>
+                        <?php if (!empty($ncc_url)) : ?>
+                            <a href="<?php echo esc_url($player_url); ?>" 
+                               class="action-button button-primary"  
+                               target="_blank">
+                               <i class="dashicons dashicons-controls-volumeon"></i>
+                                <?php _e('Baca Buku', 'pustakabilitas'); ?>
                             </a>
                         <?php endif; ?>
+
+                        <button class="action-button add-to-collection" data-book-id="<?php echo get_the_ID(); ?>">
+                            <i class="dashicons dashicons-plus"></i>
+                            <?php _e('Tambah ke Koleksi', 'pustakabilitas'); ?>
+                        </button>
                     </div>
                 <?php else : ?>
                     <div class="login-notice">
